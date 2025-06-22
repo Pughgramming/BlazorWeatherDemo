@@ -1,0 +1,133 @@
+﻿@page "/weather"
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@using BrowserInterop.Extensions
+@using BrowserInterop.Geolocation
+@using BlazorWeatherDemo.Common
+
+<PageTitle>Weather</PageTitle>
+
+<h1 class="header">Weather <i class="fa-regular fa-sun" style="color:wheat"></i></h1>
+
+
+@if (location != null)
+{
+    <p class="fade-in">Your local weather for: Lat: @location?.Latitude | Long: @location?.Longitude</p>
+}
+else if (location != null && !location.Success)
+{
+    <p class="fade-in">We couldn't access your location: @location.Message</p>
+}
+else
+{
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Locating you... hang tight 👀</p>
+    </div>
+}
+
+@if (location != null && forecasts != null)
+{
+    <table class="table fade-in">
+        <thead>
+            <tr>
+                <th></th>
+                @foreach (var forecast in forecasts)
+                {
+                    <th>
+                        @forecast.Date.ToString("dddd, M/d/yyyy")
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Temp.</td>
+                @foreach (var forecast in forecasts)
+                {
+                    <td>@forecast.TemperatureF &deg;F.</td>
+                }
+            </tr>
+            <tr>
+                <td>Summary</td>
+                @foreach (var forecast in forecasts)
+                {
+                    <td>@forecast.Summary</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private LocationResult? location;
+    private bool hasCalledJs = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = startDate.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+            }).ToArray();
+
+        foreach (var forecast in forecasts)
+        {
+            forecast.Summary = DescribeTemperature(forecast.TemperatureF);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        Console.WriteLine("Called");
+        if (firstRender && !hasCalledJs)
+        {
+            hasCalledJs = true;
+            try
+            {
+                Thread.Sleep(2000); // Simulate a delay to show the loading state
+                location = await JS.InvokeAsync<LocationResult>("getUserLocation");
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting location: {ex.Message}");
+            }
+        }
+    }
+
+    private string DescribeTemperature(int tempC)
+    {
+        return tempC switch
+        {
+            <= 32 => Enums.TemperatureDescription.Freezing.ToString(),
+            <= 58 => Enums.TemperatureDescription.Cold.ToString(),
+            <= 75 => Enums.TemperatureDescription.Cool.ToString(),
+            <= 80 => Enums.TemperatureDescription.Warm.ToString(),
+            <= 90 => Enums.TemperatureDescription.Hot.ToString(),
+            _ => Enums.TemperatureDescription.Scorching.ToString()
+        };
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+
+    public class LocationResult
+    {
+        public bool Success { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string? Message { get; set; }
+    }
+}
