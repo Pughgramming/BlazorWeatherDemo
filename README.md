@@ -13,11 +13,23 @@ LocalSkies is a simple yet stylish web app built with Razor Pages and .NET. It's
 - 📱 Responsive design for mobile and desktop
 - 🎨 Light, modern styling that’s easy on the eyes  
 
-## 🚀 Getting Started
+## 🧱 Tech Stack
+- Blazor Server (.NET 8+)
+- Razor Components (C# / HTML)
+- CSS & animation styling
+  
+## 💡 Planned Features
+- Real-time forecast via weather API
+- User location detection
+- Theme switcher (light/dark mode)
+- Weather condition icons + animations
+- Weather Map or Radar (depending on licensing)
 
-To run the app locally:
+ ## 🤝 Contributing
+This is a work in progress. Feel free to:
 
-```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
-dotnet run
+- Suggest features
+- Report bugs
+- Drop some weather puns ☁️
+
+GitHub repo: [[BlazorWeatherDemo](https://github.com/Pughgramming/BlazorWeatherDemo/)]
