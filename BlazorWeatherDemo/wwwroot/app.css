@@ -31,6 +31,8 @@ h1:focus {
     margin: auto;
     padding: 2em;
 }
+
+
 /*Buttons section*/
 /*-------------------------------------------------------------------*/
 .btn-primary {
@@ -43,39 +45,77 @@ h1:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/*Tables section*/
+/*Forecast Cards section*/
 /*-------------------------------------------------------------------*/
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 0.95rem;
-    color: #333;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+.forecast-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-    .table thead {
-        background-color: #f4f6f8;
+.forecast-card {
+    background: linear-gradient(135deg, #f5faff, #ffffff);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .forecast-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     }
 
-    .table th {
-        text-align: left;
-        padding: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        border-bottom: 2px solid #ddd;
+    .forecast-card h4 {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+        color: #1565c0;
     }
 
-    .table td {
-        padding: 0.75rem;
-        border-bottom: 1px solid #eee;
+    .forecast-card p {
+        margin: 0.25rem 0;
+        color: #37474f;
     }
 
-    .table tr:hover {
-        background-color: #fafafa;
+/*Nav Styles*/
+/*-------------------------------------------------------------------*/
+.custom-navbar {
+    background-color: #808080;
+    border-bottom: 1px solid #d1e3ed;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar-brand {
+    color:lightgrey;
+}
+
+.nav-scrollable {
+    background-color: #f2f5ff; /* pale sky blue-gray */
+    border-right: 1px solid #d1e3ed;
+    min-height: 100vh;
+    padding-top: 1rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.nav-link {
+    color:#000000;
+    font-weight: 500;
+    display: block;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem 0;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .nav-link:hover,
+    .nav-link.active {
+        background-color: #d7ecf8;
+        color: #0078d4;
     }
+
 
 /*Spinner/Loading Styles*/
 /*-------------------------------------------------------------------*/
@@ -149,6 +189,42 @@ h1:focus {
     }
 }
 
+/*Weather section*/
+/*-------------------------------------------------------------------*/
+/*.sunny {
+    background: linear-gradient(135deg, #fff3e0, #ffe082);
+    color: #e65100;
+}*/
+
+/*.cloudy {
+    background: linear-gradient(135deg, #eceff1, #cfd8dc);
+    color: #455a64;
+}
+
+.rainy {
+    background: linear-gradient(135deg, #e3f2fd, #90caf9);
+    color: #1565c0;
+}
+
+.snowy {
+    background: linear-gradient(135deg, #f0f4ff, #ffffff);
+    color: #1a237e;
+}
+
+.stormy {
+    background: linear-gradient(135deg, #d1c4e9, #b39ddb);
+    color: #4a148c;
+}
+
+.default-weather {
+    background: linear-gradient(135deg, #f5f5f5, #ffffff);
+    color: #424242;
+}
+.windy {
+    background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+    color: #006064;
+}*/
+
 
 /*Others section*/
 /*-------------------------------------------------------------------*/
@@ -176,4 +252,37 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+/*Mobile section*/
+/*-------------------------------------------------------------------*/
+@media (max-width: 600px) {
+    .table {
+        display: none; /* Hide table on small screens */
+    }
+
+    .forecast-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .forecast-card {
+        background: linear-gradient(135deg, #e3f2fd, #ffffff);
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+        .forecast-card h4 {
+            margin: 0 0 0.5rem;
+            font-size: 1.1rem;
+            color: #0d47a1;
+        }
+
+        .forecast-card p {
+            margin: 0.25rem 0;
+            color: #37474f;
+        }
 }

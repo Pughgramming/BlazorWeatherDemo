@@ -4,7 +4,7 @@
     {
         public enum WeatherCondition
         {
-            Clear,
+            Sunny,
             Cloudy,
             Rainy,
             Snowy,

@@ -6,9 +6,9 @@
 @using BrowserInterop.Geolocation
 @using BlazorWeatherDemo.Common
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>Local Weather</PageTitle>
 
-<h1 class="header">Weather <i class="fa-regular fa-sun" style="color:wheat"></i></h1>
+<h1 class="header">Your Local Weather 🌞</h1>
 
 
 @if (location != null)
@@ -23,41 +23,24 @@ else
 {
     <div class="loading-container">
         <div class="spinner"></div>
-        <p class="loading-text">Locating you... hang tight 👀</p>
+        <p class="loading-text">Getting your 5-day forecast... hang tight 👀</p>
     </div>
 }
 
 @if (location != null && forecasts != null)
 {
-    <table class="table fade-in">
-        <thead>
-            <tr>
-                <th></th>
-                @foreach (var forecast in forecasts)
-                {
-                    <th>
-                        @forecast.Date.ToString("dddd, M/d/yyyy")
-                    </th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Temp.</td>
-                @foreach (var forecast in forecasts)
-                {
-                    <td>@forecast.TemperatureF &deg;F.</td>
-                }
-            </tr>
-            <tr>
-                <td>Summary</td>
-                @foreach (var forecast in forecasts)
-                {
-                    <td>@forecast.Summary</td>
-                }
-            </tr>
-        </tbody>
-    </table>
+    @for (int i = 0; i < forecasts.Length; i++)
+    {
+        var forecast = forecasts[i];
+        var delay = 0.2 * i; // Delay in seconds
+        var weatherClass = GetWeatherClass(forecast.Condition);
+
+        <div class="forecast-card fade-in @weatherClass" style="animation-delay: @($"{delay:0.0}s")">
+            <h4>@forecast.Date.ToString("dddd, M/d/yyyy")</h4>
+            <p><strong>Temp: </strong> @forecast.TemperatureF &deg;F</p>
+            <p><strong>Condition: </strong> @forecast.Condition</p>
+        </div>
+    }
 }
 
 @code {
@@ -79,7 +62,7 @@ else
 
         foreach (var forecast in forecasts)
         {
-            forecast.Summary = DescribeTemperature(forecast.TemperatureF);
+            forecast.Condition = GenerateWeatherCondition();
         }
     }
 
@@ -91,7 +74,7 @@ else
             hasCalledJs = true;
             try
             {
-                Thread.Sleep(2000); // Simulate a delay to show the loading state
+                Thread.Sleep(1500); // Simulate a delay to show the loading state
                 location = await JS.InvokeAsync<LocationResult>("getUserLocation");
                 StateHasChanged();
             }
@@ -102,24 +85,35 @@ else
         }
     }
 
-    private string DescribeTemperature(int tempC)
+    string GenerateWeatherCondition()
     {
-        return tempC switch
+        return Random.Shared.Next(0, 6) switch
         {
-            <= 32 => Enums.TemperatureDescription.Freezing.ToString(),
-            <= 58 => Enums.TemperatureDescription.Cold.ToString(),
-            <= 75 => Enums.TemperatureDescription.Cool.ToString(),
-            <= 80 => Enums.TemperatureDescription.Warm.ToString(),
-            <= 90 => Enums.TemperatureDescription.Hot.ToString(),
-            _ => Enums.TemperatureDescription.Scorching.ToString()
+            0 => Enums.WeatherCondition.Sunny.ToString(),
+            1 => Enums.WeatherCondition.Cloudy.ToString(),
+            2 => Enums.WeatherCondition.Rainy.ToString(),
+            3 => Enums.WeatherCondition.Snowy.ToString(),
+            4 => Enums.WeatherCondition.Stormy.ToString(),
+            _ => Enums.WeatherCondition.Windy.ToString()
         };
+    }
+
+    string GetWeatherClass(string condition)
+    {
+        condition = condition.ToLower();
+        if (condition.Contains("sun") || condition.Contains("clear")) return "sunny";
+        if (condition.Contains("cloud")) return "cloudy";
+        if (condition.Contains("rain")) return "rainy";
+        if (condition.Contains("snow")) return "snowy";
+        if (condition.Contains("storm") || condition.Contains("thunder")) return "stormy";
+        return "default-weather";
     }
 
     private class WeatherForecast
     {
         public DateOnly Date { get; set; }
         public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
+        public string? Condition { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
 

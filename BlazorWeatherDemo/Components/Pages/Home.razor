@@ -1,7 +1,29 @@
 ﻿@page "/"
+@using Common
 
-<PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<link rel="stylesheet" href="home.css" />
 
-Welcome to your new app.
+<PageTitle>Local-Skies</PageTitle>
+
+<div class="hero fade-in" style="animation-delay: 0.3s">
+    <h2 class="headerTwoHome">Welcome to Local-Skies</h2>
+    <p>
+        An app built to show your local 5-day forecast without all that pesky ad bloat.<br />
+        Check out the <a href="weather"><strong>Weather</strong></a> tab to see today’s forecast at a glance.
+    </p>
+    <p style="animation-delay: 0.6s">
+        This app is still evolving—follow along or contribute on <a href="@Constants.GITHUB_URL">GitHub</a>.<br />
+        Suggestions, weather jokes, and code reviews welcome!
+    </p>
+</div>
+
+<div class="card fade-in" style="margin-top: 2rem; animation-delay: 0.9s">
+    <h3>☔ On the Radar</h3>
+    <ul>
+        <li>Real-time forecast via weather API</li>
+        <li>Theme switcher (light/dark mode)</li>
+        <li>Weather condition icons + animations</li>
+        <li>Weather Map or Radar (depending on licensing)</li>
+    </ul>
+</div>
